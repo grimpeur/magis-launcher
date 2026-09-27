@@ -1,0 +1,80 @@
+# Built application
+*.apk
+*.ap_
+*.aab
+
+# Files for the ART/Dalvik VM
+*.dex
+
+# Java class files
+*.class
+
+# Generated files
+build/
+app/build/
+gradle/build/
+
+# Gradle wrapper and cache
+.gradle/
+gradle-app*.kv
+
+# Local configuration
+local.properties
+.env
+
+# Proguard
+proguard/
+
+# Log Files
+*.log
+
+# Android Studio
+.idea/
+*.iml
+.navigation/
+captures/
+
+# Keystore files
+*.jks
+*.keystore
+
+# External native build
+.externalNativeBuild/
+.cxx/
+
+# Google Services
+google-services.json
+
+# Fast lane
+fastlane/
+
+# OS specific
+.DS_Store
+Thumbs.db
+
+# Android Emulator data
+.avd/
+*.dat
+*.lock
+
+# tmp
+/tmp/
+*.db
+
+# IDE
+.vscode/
+*.swp
+*~
+
+# Local QEMU/quickemu VM (no tiene que ver con la app, es máquina-específico)
+quickemu-tv.*
+*.qcow2
+OVMF_VARS*.fd
+OVMF_CODE*.fd
+emulator_screenshot.png
+
+# Carpeta de deploy a Surge (la arma scripts/publish_release.sh)
+/dist/
+
+# Config de WireGuard con la clave privada: se embebe en la APK pero no se commitea
+app/src/main/assets/wireguard.conf

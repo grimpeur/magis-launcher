@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="bg">#FF12151B</color>
+    <color name="orange">#FFFD8D02</color>
+    <color name="orange_red">#FFFD3A10</color>
+    <color name="text_primary">#FFFFFFFF</color>
+    <color name="text_secondary">#FFB0B6C0</color>
+</resources>

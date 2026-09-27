@@ -1,0 +1,11 @@
+# Copiá acá la config WireGuard bajada de https://account.protonvpn.com/downloads
+# (WireGuard configuration → plataforma Android/Router) y guardala como wireguard.conf
+[Interface]
+PrivateKey = <clave privada>
+Address = 10.2.0.2/32
+DNS = 10.2.0.1
+
+[Peer]
+PublicKey = <clave pública del servidor>
+AllowedIPs = 0.0.0.0/0
+Endpoint = <ip del servidor>:51820

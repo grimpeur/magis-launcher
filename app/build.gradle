@@ -1,0 +1,92 @@
+plugins {
+    id 'com.android.application'
+    id 'org.jetbrains.kotlin.android'
+}
+
+android {
+    namespace 'com.androidtv.magislauncher'
+    compileSdk 35
+
+    defaultConfig {
+        applicationId "com.androidtv.magislauncher"
+        minSdk 21
+        targetSdk 34
+        // Sin versionado semántico: un solo contador entero para todo (lo sube
+        // scripts/publish_release.sh en cada publicación a Surge).
+        versionCode 2
+        versionName versionCode.toString()
+        archivesBaseName = "magis-launcher"
+    }
+
+    def env = new Properties()
+    def envFile = rootProject.file('.env')
+    if (envFile.exists()) {
+        envFile.withInputStream { env.load(it) }
+    }
+
+    signingConfigs {
+        release {
+            storeFile rootProject.file(env.getProperty('KEYSTORE_PATH', 'magis-launcher.keystore'))
+            storePassword env.getProperty('KEYSTORE_PASSWORD', '')
+            keyAlias env.getProperty('KEY_ALIAS', 'magis-launcher')
+            keyPassword env.getProperty('KEY_PASSWORD', '')
+        }
+    }
+
+    buildTypes {
+        release {
+            signingConfig signingConfigs.release
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+        debug {
+            debuggable true
+        }
+    }
+
+    compileOptions {
+        // La librería de WireGuard usa APIs de java.util/java.time que no existen en minSdk 21.
+        coreLibraryDesugaringEnabled true
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+
+    kotlinOptions {
+        jvmTarget = '17'
+    }
+
+    buildFeatures {
+        viewBinding true
+        buildConfig true
+    }
+
+    applicationVariants.all { variant ->
+        variant.outputs.all { output ->
+            outputFileName = "magis-launcher-${variant.buildType.name}-${defaultConfig.versionName}.apk"
+        }
+    }
+}
+
+// La config de WireGuard (con la clave privada) se embebe en la APK pero no se commitea.
+tasks.register('checkWireguardConfig') {
+    def conf = file('src/main/assets/wireguard.conf')
+    doLast {
+        if (!conf.exists()) {
+            throw new GradleException("Falta app/src/main/assets/wireguard.conf (ver wireguard.conf.example)")
+        }
+    }
+}
+preBuild.dependsOn 'checkWireguardConfig'
+
+dependencies {
+    coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:2.0.4'
+
+    implementation 'androidx.core:core-ktx:1.12.0'
+    implementation 'androidx.appcompat:appcompat:1.6.1'
+    implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.7.0'
+
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3'
+
+    implementation 'com.wireguard.android:tunnel:1.0.20230706'
+    implementation 'com.squareup.okhttp3:okhttp:4.12.0'
+}
